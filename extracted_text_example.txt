@@ -1,0 +1,47 @@
+Domain names are organized in hierarchies. Actual: DNS consists of a hierarchical domain
+scheme and a distributed database system to
+implement this naming scheme For Internet Infrastructure – one domain: .arpa ARPA (Address
+and Routing Parameter Area)
+Pseudo-domains: .bitnet, .local, .root, .uucp etc. – The physical topology is not taken into
+consideration Each domain controls how its subdomains are
+assigned DNS To create a new subdomain, permissions are
+requested from the upper domain (each domain
+will have an authority at a certain level) The naming domain is performed in respect to the
+organizational boundaries, not those of networks – Theoretically, a single name server can contain the
+entire DNS database and can respond to all
+requests There is a primary/authoritative name server that
+manages a certain domain, and possibly, more
+secondary servers contain replicated databases Example of name server implementations:
+BIND (Berkeley Internet Name Domain),
+MSDNS, PowerDNS etc. – Recursive – if a DNS server does not know the
+address for the requested name, then it will query
+another DNS server – Incremental – if the DNS server does not know how
+to respond, it will return an error and another DNS
+server address (also called referral) that may know
+the answer to the query If we have an address, which will be its symbolic
+name? (reverse DNS resolution or reverse DNS
+lookup) We do not have to develop a resolver in order to find
+out the IP address of a host Usage example: setting a symbolic name instead of an IP address
+in a sockaddr_in structure:
+struct sockaddr_in server;
+struct hostent *hos;
+if(!( hos = gethostbyname(“fenrir.info.uaic.ro”) )
+{/*Error on resolving address*/}
+server.sin_family=AF_INET;
+/* we take the IP address from hos structure */
+memcpy(&server.sin_addr.s_addr, hos->h_addr_list[0],
+sizeof(hos->h_addr_list));
+server.sin_port=htons(4321);
+Return value: On success, it returns a pointer to hostent, which
+contains the official name of the host; On error, it returns NULL,
+and h_errno variable indicates the error Cases when we can have multiple structures:
+– If a hostname has multiple IP addresses, then a structure is
+returned for each one
+– If the service is offered for different types of sockets, then a
+structure in returned for each type of socket DNS root is officially administered by
+Internet Corporation for Assigned Names
+and Numbers (ICANN)
+There are other organizations that offer
+alternative roots, like OpenNIC (Network
+Information Center) or New.Net
+
