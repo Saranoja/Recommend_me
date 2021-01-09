@@ -1,6 +1,14 @@
 from PyPDF2 import PdfFileReader as reader
-from json import dumps
+import json
 from collections import OrderedDict
+
+
+class SetEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        return json.JSONEncoder.default(self, obj)
+
 
 key_phrases = ["mandatory access control models",
                "security classes",
@@ -31,6 +39,11 @@ pdf_document = "Introduction_to_Computer_Security.pdf"
 
 buckets = dict()
 
+# with open(pdf_document, "rb") as file_handle:
+#     pdf = reader(file_handle)
+#     page = pdf.getPage(1)
+#     print(page.extractText())
+
 with open(pdf_document, "rb") as file_handle:
     pdf = reader(file_handle)
     pages = pdf.getNumPages()
@@ -42,37 +55,35 @@ with open(pdf_document, "rb") as file_handle:
     words_cluster = set()
     first_page_of_cluster = 20
 
-    for page_number in range(20, pages - 100):
+    no_of_empty_pages = 0
+    for page_number in range(20, 200):
         page = pdf.getPage(page_number)
         page_text = page.extractText()
-        is_page_empty = True
 
+        is_page_empty = True
         for word in to_search:
             if word in page_text:
                 if len(words_cluster) == 0:
-                    first_page_of_cluster = page_number
+                    first_page_of_cluster = page_number + 1
                 is_page_empty = False
+                no_of_empty_pages = 0
                 words_cluster.add(word)
 
-        if not is_page_empty:
-            buckets[first_page_of_cluster] = words_cluster
-        else:
-            words_cluster.clear()
+        if is_page_empty:
+            no_of_empty_pages += 1
 
-        print(f'Current buckets: {buckets}')
+        if no_of_empty_pages == 1:
+            last_page_of_cluster = page_number
+            buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = words_cluster
+            words_cluster = set()
 
-    print(f'\nBuckets: {buckets}')
-    #
-    # sorted_words = OrderedDict(sorted(buckets.items(), key=lambda item: len(item[1]), reverse=True))
-    #
-    # print(f'Sorted words: {sorted_words}')
-    #
-    # best5 = 0
-    # best_5_clusters = {}
-    # for k, v in sorted_words:
-    #     best_5_clusters[k] = v
-    #     best5 += 1
-    #     if best5 == 5:
-    #         break
-    #
-    # print(f'\nBest 5 clusters are found starting from pages: {best_5_clusters}')
+        # print(f'Current buckets: {buckets}')
+
+    print(f'\nBuckets: {json.dumps(buckets, indent=2, cls=SetEncoder)}')
+
+    sorted_words = sorted(buckets.items(), key=lambda item: len(item[1]), reverse=True)
+    no_of_buckets = int(len(sorted_words) * 0.1)
+    for index, bucket in enumerate(sorted_words):
+        print(bucket)
+        if index > no_of_buckets:
+            break
