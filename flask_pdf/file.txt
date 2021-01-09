@@ -1,0 +1,807 @@
+Domain Name System
+
+Lenuta Alboaie (adria@info.uaic.ro)
+Andrei Panu (andrei.panu@info.uaic.ro)
+
+1
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+Content
+
+• Domain Name System (DNS)
+
+• Characterization
+• Organization
+• Configuration
+• Commands, Primitives
+• IDN
+
+2
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS
+
+• IP Addresses (e.g., 85.122.23.145, 
+
+2001:0db8:0001:0000:0000:0ab9:C0A8:0102) 
+are difficult to remember
+
+• A domain name system is used to map IP 
+addresses to domain names and vice versa
+• Domain names are organized in hierarchies
+
+• RFC 1034, 1035, 1123, 2181
+
+3
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• Initial: /etc/hosts – pairs (name, IP)
+
+– Scalability problems
+
+• Actual: DNS consists of a hierarchical domain 
+scheme and a distributed database system to 
+implement this naming scheme
+
+4
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+Figure. A portion of the domain names space on 
+the Internet
+
+5
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+[Computer Networks, 2003 
+Andrew S. Tanenbaum]
+
+DNS| domain types
+
+• Primary (Top Level Domains – TLD)
+
+– For Internet Infrastructure – one domain:
+
+.arpa ARPA (Address
+
+and Routing Parameter Area)
+
+• “Changes to the .arpa zone must be coordinated manually with IANA”
+
+– State (ccTLD) – states code: .ro, .fr, .jp, …
+– IDN ccTLD (Internationalized Country Code Top-Level Domains)
+
+http://例子.测试 http://example.test
+
+– Generics: .biz, .com, .info, .name, .net, .org, .pro
+– Sponsored: .aero, .edu, .gov, .int, .jobs, .mil, .tel
+– Reserved: .example, .invalid, .localhost, .test
+– Pseudo-domains: .bitnet, .local, .root, .uucp etc.
+
+https://www.iana.org/domains/root/db/
+
+6
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| domain types
+
+7
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| domain types
+
+• Domain name
+
+– Sub-tree of the domain tree
+– The physical topology is not taken into 
+
+consideration
+
+• Sub-domains:
+
+– Full path name cannot exceed 255 characters
+
+• Name of computers (hosts)
+
+8
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS
+
+• Example:
+
+9
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• Rules to allocate to domain names:
+
+– Each domain controls how its subdomains are
+
+assigned
+
+– To create a new subdomain, permissions are
+requested from the upper domain (each domain
+will have an authority at a certain level)
+
+– The naming domain is performed in respect to the
+organizational boundaries, not those of networks
+– A certain level of hierarchy can be controlled by
+
+multiple servers
+
+10
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• Name servers
+
+– Theoretically, a single name server can contain the 
+
+entire DNS database and can respond to all 
+requests
+
+– Problems: loading and “single point of failure”
+
+– DNS name space is divided into non-overlapping 
+
+areas
+
+11
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• Name servers
+
+Example: A possible division of DNS namespace 
+in areas
+
+[Computer Networks, 2003 
+Andrew S. Tanenbaum]
+12
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• Name servers
+
+– There is a primary/authoritative name server that
+manages a certain domain, and possibly, more
+secondary servers contain replicated databases
+
+– TCP is used for DNS replication
+– UDP is used for queries (lookups)
+
+13
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| organization
+
+• DNS Client 
+
+– Called resolver, sends an UDP packet to a DNS 
+
+server; the server seeks the name and returns the 
+IP address
+
+14
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+[Retele de calculatoare –
+curs 2007-2008, Sabin Buraga]
+
+DNS| organization
+
+• Example of name server
+
+implementations:
+Internet Name Domain),
+
+BIND (Berkeley
+MSDNS, PowerDNS etc.
+
+• As interactive resolvers (clients), the following
+commands can be used: nslookup, host, and
+dig.
+
+15
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| queries
+
+• Queries:
+
+– Recursive – if a DNS server does not know the
+address for the requested name, then it will query
+another DNS server
+
+– Incremental – if the DNS server does not know how
+to respond, it will return an error and another DNS
+server address (also called referral) that may know
+the answer to the query
+
+[http://technet.microsoft.com/en-us/library/cc775637%28v=ws.10%29.aspx]
+
+16
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| queries
+
+• Each domain is associate with a set of resource 
+
+records (resource record – RR)
+
+• The mechanism: 
+
+– The request: the resolver sends a domain name
+– The response: the resource records associated with 
+
+that name (stored in DNS database)
+
+DNS creates a correspondence between the domain 
+names and the resource records
+
+17
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| queries
+
+• RR general form:
+
+Domain_Name Time_to_live Type  Class  Value
+
+Domain name – specifies the field covered by this 
+
+Time-to-live – gives an indication of how stable the 
+
+registration
+
+recording is
+
+18
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| queries
+
+Type  - specifies the registration type
+
+– SOA (Start Of Authority) : the current domain, administrator
+
+e-mail address, etc.
+
+– A – host IP
+– MX (mail exchangers) – specifies the domain name ready to
+
+accept mail for the specified domain
+
+– CNAME (Canonical Name) – allows creation of pseudonyms
+– PTR (Pointer) – Alias for IP address
+– HINFO – allows to find: computer type, operating system
+
+type corresponding to the domain
+– TXT: uninterpreted text (comments)
+
+19
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| queries
+
+Class: for Internet, the value is IN
+Value: this field can be a number, a domain name or 
+
+an ASCII string; the semantics depend on 
+registration
+
+Example of 
+DNS 
+resource 
+records
+
+20
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| configuration
+
+• Example of a file containing a DNS zone 
+
+specification
+
+21
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| clients, resolvers, servers
+
+As configuration file used by the 
+resolver: /etc/resolv.conf
+
+22
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+[Unix Network Programming, R. Stevens 
+B. Fenner, A. Rudoff - 2003
+
+DNS| configuration
+
+• /etc/resolv.conf file:
+
+23
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| reverse queries
+
+• Problem:
+
+– If we have an address, which will be its symbolic 
+name? (reverse DNS resolution or reverse DNS 
+lookup)
+
+Example: 
+
+1) 
+
+2)  2001:db8::567:89ab
+
+b.a.9.8.7.6.5.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa24
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| optimizations
+
+Spatial proximity: local servers will be queried more 
+
+often than others at the distance
+
+Temporal proximity: if a set of fields are referenced 
+repeatedly, then the DNS caching mechanism is 
+used
+
+For each DNS entry a TTL (time to live) value is set
+Replication is also used (multiple servers, multiple 
+
+root servers) – the nearest (geographically) server 
+will be interrogated
+
+25
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| commands
+
+As interactive resolvers, we can use:
+
+– nslookup
+– dig
+– host 
+– whois
+– …
+
+26
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| nslookup
+
+Usage examples:
+ nslookup www.info.uaic.ro
+- Returns a RR of type A, using the local DNS server
+
+ nslookup 85.122.23.1
+- Returns a RR of type PTR for 85.122.23.1 in in-addr.arpa domain hierarchy
+
+27
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+[http://www.zytrax.com/books/dns/ch3/]
+
+Host Lookup
+
+Reverse IP
+Lookup
+
+DNS| nslookup
+
+Usage examples:
+
+ nslookup www.axiologic.ro
+- Returns a RR of type A  using a specified DNS server
+
+Host Lookup
+
+ man nslookup
+
+28
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| dig
+
+dig – a tool more powerful than nslookup
+
+Usage 
+
+example:
+
+ dig www.info.uaic.ro A
+
+29
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| host
+
+host
+
+Usage example:
+
+30
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| whois
+
+whois ibm.com
+
+31
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| primitives
+
+• We do not have to develop a resolver in order to find 
+
+out the IP address of a host
+
+• Main functions:
+
+• gethostbyname(); getaddrinfo();
+• gethostbyaddr() ; getnameinfo();
+
+• For some operating systems (e.g., Solaris), when 
+compiling, we must specify the nsl (Name Server 
+Library) library: gcc … -lnsl
+
+32
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| primitives
+
+One of the used structures: hostent
+struct hostent { 
+
+char *h_name;       /* official name (canonical) */ 
+char **h_aliases;   /* aliases */ 
+int h_addrtype;      /* AF_INET */
+int h_length;         /* address length: 4 or 6 */ 
+char **h_addr_list; /*pointers to IP addrresses */ 
+
+}; 
+
+33
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| primitives
+
+hostent structure:
+
+Host’s official name
+(canonical name)
+
+h_addrtype
+
+AF_INET
+
+h_name
+
+h_aliases
+
+h_length
+
+h_addr_list
+
+…
+
+NULL
+
+…
+
+NULL
+
+alias 1
+
+alias 2
+
+IP address 1
+
+IP address 2
+
+34
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| gethostbyname()
+
+#include <netdb.h>
+struct hostent *gethostbyname
+
+(const char *hostname);
+
+• In DNS terms, gethostbyname() does a 
+
+request for a type A record
+
+• Obs.: gethostbyname() is used mostly for IPv4
+
+35
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| gethostbyname()
+
+• Returns: 
+
+– On success, it returns a pointer to hostent, which 
+
+contains the host’s IP address
+
+– On error, it returns NULL, and h_errno indicates the 
+
+error number:
+• HOST_NOT_FOUND
+• …
+• NO_RECOVERY
+• …
+
+Constants defined in
+netdb.h
+
+36
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| gethostbyname()
+
+• Usage example: setting a symbolic name instead of an IP address 
+
+in a sockaddr_in structure:
+
+struct sockaddr_in server;
+struct hostent *hos;
+if(!( hos = gethostbyname(“fenrir.info.uaic.ro”) ) 
+
+{/*Error on resolving address*/}
+
+server.sin_family=AF_INET;
+
+/* we take the IP address from hos structure */
+
+memcpy(&server.sin_addr.s_addr, hos->h_addr_list[0], 
+sizeof(hos->h_addr_list));
+
+server.sin_port=htons(4321);
+
+37
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| gethostbyaddr()
+
+#include <netdb.h>
+
+struct hostent *gethostbyaddr (
+const char *addr,
+socklen_t len, 
+int family);
+
+•
+
+In DNS terms, gethostbyaddr() does a request to the nameserver
+for a PTR record in in-addr.arpa domain
+
+• Return value:  On success, it returns a pointer to hostent, which 
+contains the official name of the host; On error, it returns NULL,  
+and h_errno variable indicates the error
+Obs.: gethostbyaddr() is used mostly for IPv4
+
+38
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getservbyname()
+
+#include <netdb.h>
+struct servent *getservbyname (const char *servname, const char 
+
+• Return value: On success, a pointer to struct servent; On error, 
+
+*protoname);
+
+NULL
+
+struct servent { 
+
+char *s_name;      /* official name of the service*/ 
+char **s_aliases;  /* aliases */ 
+int s-port;               /* port (network-byte order) */
+/* protocol */ }; 
+char *s_proto;
+
+Example: struct servent *pserv;
+
+pserv=getservbyname(“ftp”,”tcp”); /* FTP using TCP */
+
+39
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getservbyport()
+
+#include <netdb.h>
+struct servent *getservbyport (int port, const char *protoname);
+• Searches for a service that matches the specified port and 
+
+protocol (optional)
+
+• Return value: a pointer to struct servent on success, NULL on 
+
+Obs.: port must be specified in network byte order
+
+error
+
+Example: 
+
+struct servent *pserv;
+pserv=getservbyport( htons(53), ”udp”); /* DNS using UDP */
+pserv=getservbyport( htons(21),”tcp”); /* FTP using TCP */
+
+40
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getaddrinfo()
+
+#include <netdb.h>
+int getaddrinfo (
+
+const char *hostname, 
+const char *service, 
+const struct addrinfo *hints, 
+struct addrinfo **result ) ;
+
+Hostname or an IPv4/IPv6 address as 
+string
+
+Service’s port or name (“http”,”pop”,..)  
+(see /etc/services file)
+
+Specifies criteria for refining the 
+return value
+
+• Obs. hostname, service, hints – input parameters
+• Return value: 0 on success, !=0 on error
+• Recommended to be used for IPv4 and IPv6
+• Combines functionalities of: gethostbyname(), getservbyname(),   
+
+getservbyport()
+
+41
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getaddrinfo()
+
+struct addrinfo { 
+
+int ai_flags;           /* AI_PASSIVE, AI_CANONNAME */ 
+int ai_family;        /* AF_INET, AF_INET6, AF_UNSPEC */ 
+int ai_socktype;   /* SOCK_STREAM or SOCK_DGRAM */ 
+int ai_protocol;   /* 0 (auto) or IPPROTO_TCP, IPPROTO_UDP */
+socklen_t ai_addrlen; /* ai_addr length */
+char *ai_canonname; /* host’s canonical name */ 
+struct sockaddr *ai_addr; /* socket’s binary address */ 
+struct addrinfo *ai_next; /* pointer to the next structure from 
+the list */
+
+};
+
+42
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getaddrinfo()
+
+Discussion:
+•
+
+If the function successfully returns, result will point to a list of struct
+addrinfo elements
+Cases when we can have multiple structures:
+– If a hostname has multiple IP addresses, then a structure is 
+
+returned for each one
+
+– If the service is offered for different types of sockets, then a 
+
+structure in returned for each type of socket
+
+• The data returned by getaddrinfo() in struct addrinfo **result can be 
+
+used like this:
+– for socket() : ai_family, ai_socktype, ai_protocol
+– for connect() or bind(): ai_addr and ai_addrlen
+freeaddrinfo()
+
+•
+
+43
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| getnameinfo()
+
+#include <netdb.h>
+int getnameinfo (
+
+socket’s address
+
+const struct sockaddr *sockaddr,      
+socklen_t addrlen, 
+char *host, 
+socklen_t hostlen, 
+char *serv, 
+socklen_t servlen,
+int flags) ;
+
+name of the returned host
+
+the name of the service
+
+NI_NOFQDN -> host will contain only 
+the name of the host, not the full 
+domain name
+
+• Replaces gethostbyaddr() and getservbyport()
+• Returns: 0 on success, !=0 on error
+
+44
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| IDN
+
+• International Domain Names (IDN)
+
+– Extension which enables the use of Unicode 
+
+characters for domain names, not only ASCII ones
+
+https://www.icann.org/en/topics/idn/
+
+16 Noiembrie 2009 – Registration of ccIDN or IDN 
+ccTLD domains
+
+– Can be used for phishing attacks (… details in a future 
+
+lecture)
+
+45
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+DNS| administration
+
+• DNS root is officially administered by 
+
+Internet Corporation for Assigned Names 
+and Numbers (ICANN)
+
+• There are other organizations that offer 
+alternative roots, like OpenNIC (Network 
+Information Center) or New.Net
+
+46
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+Summary
+
+• Domain Name System (DNS)
+
+• Characterization
+• Organization
+• Configuration
+• Commands, Primitives
+• IDN
+
+47
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+Questions?
+
+48
+2020 – 2021| Computer Networks  – https://www.info.uaic.ro/~computernetworks
+
+
