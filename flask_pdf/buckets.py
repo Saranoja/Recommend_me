@@ -1,6 +1,5 @@
 from PyPDF2 import PdfFileReader as reader
 import json
-from collections import OrderedDict
 
 
 class SetEncoder(json.JSONEncoder):
@@ -10,32 +9,38 @@ class SetEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-key_phrases = ["mandatory access control models",
-               "security classes",
-               "mandatory integrity control",
-               "security levels",
-               "access control security policies",
-               "mac models",
-               "information ﬂow policies",
-               "integrity classes",
-               "information ﬂow",
-               "integrity levels",
-               "mandatory access control",
-               "security label",
-               "highest integrity",
-               "class",
-               "security classiﬁcation",
-               "information",
-               "security module",
-               "security clearance",
-               "models",
-               "prevent information"]
+# key_phrases = ["mandatory access control models",
+#                "security classes",
+#                "mandatory integrity control",
+#                "security levels",
+#                "access control security policies",
+#                "mac models",
+#                "information ﬂow policies",
+#                "integrity classes",
+#                "information ﬂow",
+#                "integrity levels",
+#                "mandatory access control",
+#                "security label",
+#                "highest integrity",
+#                "class",
+#                "security classiﬁcation",
+#                "information",
+#                "security module",
+#                "security clearance",
+#                "models",
+#                "prevent information"]
+
+key_phrases = ['domain names', 'domain name system', 'dns| domain types', 'name servers', 'name', 'dns name space',
+               'official name', 'internet name domain', 'full path name', 'in-addr.arpa domain', 'dns| host',
+               'in-addr.arpa domain hierarchy', 'multiple ip addresses', 'ip address', 'dns organization', 'dns|',
+               'dns| idn', 'dns| queries', 'dns| getaddrinfo', 'dns| gethostbyaddr']
 
 to_search = set(keyword for phrase in key_phrases for keyword in phrase.split(" "))
 
 print(f'Keywords to be searched in book: {to_search}')
 
-pdf_document = "Introduction_to_Computer_Security.pdf"
+# pdf_document = "Introduction_to_Computer_Security.pdf"
+pdf_document = "Computer_Networking _A_Top_Down_Approach.pdf"
 
 buckets = dict()
 
@@ -52,22 +57,22 @@ with open(pdf_document, "rb") as file_handle:
 
     print("Starting analyzing book...")
 
-    words_cluster = set()
-    first_page_of_cluster = 20
+    words_cluster = list()
+    first_page_of_cluster = 80
 
     no_of_empty_pages = 0
-    for page_number in range(20, 200):
+    for page_number in range(50, 500):
         page = pdf.getPage(page_number)
         page_text = page.extractText()
 
         is_page_empty = True
         for word in to_search:
-            if word in page_text:
+            if word.lower() in page_text.lower():
                 if len(words_cluster) == 0:
                     first_page_of_cluster = page_number + 1
                 is_page_empty = False
                 no_of_empty_pages = 0
-                words_cluster.add(word)
+                words_cluster.append(word)
 
         if is_page_empty:
             no_of_empty_pages += 1
@@ -75,7 +80,7 @@ with open(pdf_document, "rb") as file_handle:
         if no_of_empty_pages == 1:
             last_page_of_cluster = page_number
             buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = words_cluster
-            words_cluster = set()
+            words_cluster = list()
 
         # print(f'Current buckets: {buckets}')
 
