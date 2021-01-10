@@ -45,7 +45,7 @@ def PDF_to_keywords():
 
     keywords_set = keywords_retriever.get_keywords(text)
 
-    return jsonify(list(keywords_set)), 200
+    return jsonify(keywords_set), 200
 
 
 app.run()

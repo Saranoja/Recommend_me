@@ -1,6 +1,7 @@
 import pytextrank
 import re
 import spacy
+from collections import OrderedDict
 
 word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
 with open("stopwords_english.txt", encoding="utf-8") as stopwords_file:
@@ -18,12 +19,19 @@ def get_keywords(text, keywords_number=20):
     doc = nlp(text)
 
     # examine the top k-ranked phrases in the document
-    keyword_sentences = [p.text for phrase_number, p in enumerate(doc._.phrases) if phrase_number < keywords_number]
+    # keyword_sentences = [p.text for phrase_number, p in enumerate(doc._.phrases) if phrase_number < keywords_number]
 
-    keywords_set = set()
-    for keyword_sentence in keyword_sentences:
+    keywords_ranks = {p.text: p.rank for phrase_number, p in enumerate(doc._.phrases) if
+                      phrase_number < keywords_number}
+
+    min_rank = min(keywords_ranks.values()) - 0.01
+
+    keywords = keywords_ranks.copy()
+
+    for keyword_sentence in keywords_ranks.keys():
         for keyword in word_tokenizer.findall(keyword_sentence):
             if keyword not in stopwords_english:
-                keywords_set.add(keyword)
+                keywords[keyword] = min_rank
+        min_rank -= 0.002
 
-    return keywords_set
+    return keywords
