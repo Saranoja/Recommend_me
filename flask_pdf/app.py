@@ -1,24 +1,22 @@
 from flask import Flask, request, jsonify
 import os
 import re
-import spacy
-import pytextrank
 from pdfminer.high_level import extract_text
 import io
+import keywords_retriever
 
 app = Flask(__name__)
-word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
-
-with open("stopwords_english.txt") as stopwords_file:
-    stopwords_english = stopwords_file.read().split("\n")
 
 
-# endpoint not in use anymore
-@app.route('/', methods=["POST"])
+# endpoint not in use anymore@app.route('/', methods=["POST"])
 def PDF_to_word_occurrence():
+    with open("stopwords_english.txt", encoding="utf-8") as stopwords_file:
+        stopwords_english = stopwords_file.read().split("\n")
+
     with open("file.pdf", "wb") as file:
         file.write(request.get_data())
 
+    word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
     os.system('pdf2txt.py --outfile=file.txt --output_type=text file.pdf')
 
     with open("file.txt") as file:
@@ -45,30 +43,7 @@ def PDF_to_keywords():
     pdf_file = io.BytesIO(request.get_data())
     text = extract_text(pdf_file)
 
-    # load a spaCy model, depending on language, scale, etc.
-    nlp = spacy.load("en_core_web_sm")
-
-    # add PyTextRank to the spaCy pipeline
-    tr = pytextrank.TextRank()
-    nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)
-
-    doc = nlp(text)
-
-    # examine the top-ranked phrases in the document
-    k = 0
-
-    keyword_sentences = []
-    for p in doc._.phrases:
-        # print("{}".format(p.text))
-        keyword_sentences.append(p.text)
-        k += 1
-        if k == 20:
-            break
-
-    keywords_set = set()
-    for keyword_sentence in keyword_sentences:
-        for keyword in word_tokenizer.findall(keyword_sentence):
-            keywords_set.add(keyword)
+    keywords_set = keywords_retriever.get_keywords(text)
 
     return jsonify(list(keywords_set)), 200
 
