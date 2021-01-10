@@ -12,9 +12,6 @@ class SetEncoder(json.JSONEncoder):
 pdf_document = "books/Diestel-Graph-Theory.pdf"
 
 ranks = {
-    "0": 0.026038120692609704,
-    "0k": 0.0220381206926097,
-    "0n": 0.028038120692609705,
     "24": 0.03203812069260971,
     "2pn": 0.030038120692609707,
     "a connected bipartite planar graph": 0.054144565831749134,
@@ -48,9 +45,10 @@ ranks = {
     "vertices": 0.030038120692609707
 }
 
-to_search = ranks.keys()
+to_search = list(ranks.keys())
 
 buckets = dict()
+
 
 def get_bucket_score(bucket_words, ranks_dict):
     score = 0
@@ -63,7 +61,7 @@ with open(pdf_document, "rb") as file_handle:
     pdf = reader(file_handle)
     pages = pdf.getNumPages()
 
-    print("number of pages: %i" % pages)
+    print("Number of pages: %i" % pages)
 
     print("Starting analyzing book...")
 
@@ -84,9 +82,10 @@ with open(pdf_document, "rb") as file_handle:
                 if len(words_cluster) == 0:
                     first_page_of_cluster = page_number + 1
                 no_of_empty_pages = 0
-                words_cluster.append(word)
+                for i in range(page_text.lower().count(word.lower())):
+                    words_cluster.append(word)
 
-        if number_of_words_on_current_page > 4:
+        if number_of_words_on_current_page > int(len(to_search) * 0.1):
             is_page_empty = False
 
         if is_page_empty:
@@ -99,11 +98,11 @@ with open(pdf_document, "rb") as file_handle:
 
         # print(f'Current buckets: {buckets}')
 
-    print(f'\nBuckets: {json.dumps(buckets, indent=2, cls=SetEncoder)}')
+    # print(f'\nBuckets: {json.dumps(buckets, indent=2, cls=SetEncoder)}')
 
     sorted_words = sorted(buckets.items(), key=lambda item: get_bucket_score(item[1], ranks), reverse=True)
     no_of_buckets = int(len(sorted_words) * 0.1)
     for index, bucket in enumerate(sorted_words):
-        print(f'Bucket: {bucket} with score {get_bucket_score(bucket[1], ranks)}')
+        print(f'Bucket: {bucket[0]} with score {get_bucket_score(bucket[1], ranks)}')
         if index > no_of_buckets:
             break

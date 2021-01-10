@@ -1,6 +1,7 @@
 import pytextrank
 import re
 import spacy
+from statistics import mean
 from collections import OrderedDict
 
 word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
@@ -24,7 +25,7 @@ def get_keywords(text, keywords_number=20):
     keywords_ranks = {p.text: p.rank for phrase_number, p in enumerate(doc._.phrases) if
                       phrase_number < keywords_number}
 
-    min_rank = min(keywords_ranks.values()) - 0.01
+    min_rank = mean(keywords_ranks.values()) - 0.01
 
     keywords = keywords_ranks.copy()
 
