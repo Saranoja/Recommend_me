@@ -1,15 +1,10 @@
 from flask import Flask, request, jsonify
-import json
-import requests
-from bs4 import BeautifulSoup
 import os
 import re
 import spacy
 import pytextrank
-
-# example text
-with open("file.txt", encoding="utf-8") as file:
-    text = file.read()
+from pdfminer.high_level import extract_text
+import io
 
 app = Flask(__name__)
 word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
@@ -18,6 +13,7 @@ with open("stopwords_english.txt") as stopwords_file:
     stopwords_english = stopwords_file.read().split("\n")
 
 
+# endpoint not in use anymore
 @app.route('/', methods=["POST"])
 def PDF_to_word_occurrence():
     with open("file.pdf", "wb") as file:
@@ -46,15 +42,8 @@ def PDF_to_word_occurrence():
 
 @app.route("/pdf_to_keywords", methods=["POST"])
 def PDF_to_keywords():
-    # write received file
-    with open("file.pdf", "wb") as f:
-        f.write(request.get_data())
-
-    os.system('pdf2txt.py --outfile=file.txt --output_type=text file.pdf')
-
-    # example text
-    with open("file.txt", encoding="utf-8") as file:
-        text = file.read()
+    pdf_file = io.BytesIO(request.get_data())
+    text = extract_text(pdf_file)
 
     # load a spaCy model, depending on language, scale, etc.
     nlp = spacy.load("en_core_web_sm")
