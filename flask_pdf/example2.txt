@@ -1,0 +1,43 @@
+Access control models have traditionally included mandatory access control (or lattice-based
+access control) and discretionary access control. Subsequently, role-based access control has
+been introduced, along with claims that its mechanisms are general enough to simulate the
+traditional methods. In this paper we provide systematic constructions for various common
+forms of both of the traditional access control paradigms using the role-based access control
+(RBAC) models of Sandhu et al., commonly called RBAC96. We see that all of the features of
+the RBAC96 model are required, and that although for the mandatory access control
+simulation, only one administrative role needs to be assumed, for the discretionary access
+control simulations, a complex set of administrative roles is required.
+
+Role-based access control (RBAC) has recently received considerable attention as a promising alternative to traditional discretionary and mandatory
+access controls (see, for example, Proceedings of the ACM Workshop on
+Role-Based Access Control, 1995-2000). In RBAC, permissions are associated with roles, and users are made members of appropriate roles thereby
+acquiring the roles’ permissions. This greatly simplifies management of
+permissions. Roles can be created for the various job functions in an
+organization and users then assigned roles based on their responsibilities
+and qualifications. Users can be easily reassigned from one role to another.
+Roles can be granted new permissions as new applications and systems are
+incorporated, and permissions can be revoked from roles as needed.
+An important characteristic of RBAC is that by itself it is policy neutral.
+RBAC is a means for articulating policy rather than embodying a particular security policy (such as one-directional information flow in a lattice).
+The policy enforced in a particular system is the net result of the precise
+configuration and interactions of various RBAC components as directed by
+the system owner. Moreover, the access control policy can evolve incrementally over the system life cycle, and in large systems it is almost certain to
+do so. The ability to modify policy to meet the changing needs of an
+organization is an important benefit of RBAC.
+Traditional access control models include mandatory access control
+(MAC), which we shall call lattice-based access control (LBAC) here [Denning 1976; Sandhu 1993], and discretionary access control (DAC) [Lampson
+1971; Sandhu and Samarati 1994; 1997]. Since the introduction of RBAC,
+several authors have discussed the relationship between RBAC and these
+traditional models [Sandhu 1996; Sandhu and Munawer 1998; Munawer
+2000; Nyanchama and Osborn 1994; 1996]. The claim that RBAC is more
+general than all of these traditional models has often been made. The
+purpose of this paper is to show how RBAC can be configured to enforce
+these traditional models.
+Classic LBAC models are specifically constructed to incorporate the
+policy of one-directional information flow in a lattice. This one-directional
+information flow can be applied for confidentiality, integrity, confidentiality and integrity together, or for aggregation policies such as Chinese Walls
+[Sandhu 1993]. There is nonetheless strong similarity between the concept
+of a security label and a role. In particular, the same user cleared to, for
+example, Secret, can on different occasions login to a system at Secret and
+Unclassified levels. In a sense the user determines what role (Secret or
+Unclassified) should be activated in a particular session.

@@ -1,0 +1,160 @@
+1 INTRODUCTION
+The need for information security was recognized with the advent of the rst multi-user
+computer systems. This need has become more and more signicant, as computer systems have evolved from isolated mainframes behind guarded doors to interconnected and
+decentralized open systems.
+The ob jective of information security can be divided into three separate, but interrelated,
+areas as follows: condentiality (or secrecy) is concerned with disclosure of information,
+integrity is concerned with modication of information, and availability is concerned with
+denial of access to information. These three ob jectives arise in practically every information
+system. For example, in a payroll system condentiality is concerned with preventing
+an employee from nding out the boss's salary; integrity is concerned with preventing
+an employee from changing his or her salary; and availability is concerned with ensuring
+that the paychecks are printed on time. Similarly, in a military command and control
+system condentiality is concerned with preventing the enemy from determining the target
+coordinates of a missile; integrity is concerned with preventing the enemy from altering the
+target coordinates; and availability is concerned with ensuring that the missile does get
+launched when the order is given.
+Lattice-based access control models were developed to deal with information 
+ow in
+computer systems. Information 
+ow is clearly central to condentiality. As we will see it
+also applies to integrity to some extent. Its relationship to availability is tenuous at best.
+Thus, these models are primarily concerned with condentiality and can deal with some
+aspects of integrity.
+The basic work in this area was done in the 1970s. Since then these models have been
+implemented in a number of systems, mostly driven by the needs of the Defense sector. The
+theory and concepts are, however, applicable to almost any situation in which information
+
+ow is a concern. We will see there are policies unique to the Commercial sector which have
+such concerns.
+Lattice-based access control is one of the essential ingredients of computer security as
+we understand it today. We discuss a number of models developed in this context, and
+examine their underlying theoretical and conceptual foundations.
+2 INFORMATION FLOW POLICIES
+Information 
+ow policies are concerned with 
+ow of information from one security class to
+another. In a system, information actually 
+ows from one object to another. The models
+we will be discussing, treat \ob ject" as an undened primitive concept. An ob ject can be
+(informally) dened as a container of information. Typical examples of ob jects are les and
+directories in an operating system, and relations and tuples in a database.
+Information 
+ow is typically controlled by assigning every ob ject a security class, also
+called the ob ject's security label. Whenever information 
+ows from ob ject a to ob ject b, there
+is also information 
+ow from the security class of a to the security class of b. Henceforth,
+when we speak of information 
+ow from security class X to security class Y , the reader can
+1
+visualize this as information 
+ow from an ob ject labeled X to an ob ject labeled Y .
+The concept of an information 
+ow policy was formally dened by Denning [5] as follows.
+Denition 1 [Information Flow Policy] An information 
+ow policy is a triple <SC;!
+;  > where SC is a set of security classes, !  SC  SC is a binary can-
+ow relation on
+SC, and  : SC  SC ! SC is a binary class-combining or join operator on SC. 2
+It is understood that all three components of an information 
+ow policy are xed, and do
+not change with time. Note that this denition allows ob jects to be created and destroyed
+dynamically (as one would expect to do in useful systems). Security classes, however, cannot
+be created or destroyed dynamically.
+It is convenient to use inx notation for the can-
+ow relation, so that A ! B means
+the same as (A; B) 2!, i.e., information can 
+ow from A to B. We also write A 6! B to
+mean (A; B) 62!, i.e., information cannot 
+ow from A to B. In other words, information
+can 
+ow from security class A to security class B under a given policy if and only if A ! B.
+(It might be more appropriate to call this relation may-
+ow, rather than can-
+ow, since the
+connotation is that the indicated 
+ow is permitted under the given policy. We have chosen
+to retain the original terminology of [5].)
+Similarly, inx notation will be used for the join operator, i.e., A  B = C means the
+same as (A; B) = C. The join operator species how to label information obtained by
+combining information from two security classes. Thus, A  B = C tells us that ob jects
+which contain information from security classes A and B should be labeled with the security
+class C.
+A trivial example of an information 
+ow policy is one in which no information 
+ow is
+allowed from one security class to a dierent security class. (Note that information 
+ow
+from a security class to itself cannot be prevented, and therefore must always be allowed.
+After all, information contained in an ob ject \
+ows" to that ob ject, thereby resulting in
+information 
+ow from the security class of the ob ject to itself.) This trivial policy of isolated
+security classes is formally stated as follows.
+Example 1 [Isolated Classes] SC = fA1; : : : ; Ang; for i = 1 : : : n we have Ai ! Ai and
+Ai  Ai = Ai ; and for i; j = 1 : : : n, i 6= j we have Ai 6! Aj and Ai  Aj is undened. 2
+The simplest example of a non-trivial information 
+ow policy occurs when there are just
+two security classes, called H (for high) and L (for low), with all 
+ows allowed excepting that
+from high to low. In other words high information is more sensitive than low information.
+A formal statement is given below.
+Example 2 [High-Low Policy] SC = fH; Lg, and ! = f(H; H); (L; L); (L; H)g. Equivalently, in inx notation, H ! H, L ! L, L ! H, and H 6! L. The join operator is
+dened as follows: H  H = H, L  H = H, H  L = H, and L  L = L. 2
+This policy is represented by the Hasse diagram of gure 1(a). The can-
+ow relation is
+understood to be directed upwards in this gure. The re
+exive 
+ows from H to H and L to
+L are implied but not explicitly shown. The other Hasse diagrams in gure 1 also represent
+information 
+ow policies which will be discussed in this paper. In these diagrams transitive
+edges, such as from L to H in gure 1(b), are implied but not explicitly shown.
+Denning [5] showed that under certain assumptions, given below, an information 
+ow
+2
+policy forms a nite lattice.
+Denition 2 [Denning's Axioms]
+1. The set of security classes SC is nite.
+2. The can-
+ow relation ! is a partial order on SC.
+3. SC has a lower bound with respect to !.
+4. The join operator  is a totally dened least upper bound operator.
+2
+It can be shown [5] that Denning's axioms imply the existence of a greatest lower bound
+operator, which in turn implies the existence of an upper bound with respect to !. Example
+2 satises Denning's axioms whereas example 1 does not, specically failing to satisfy axioms
+3 and 4. We will see how example 1 can be extended to form a lattice. We note that,
+although our focus in this paper is on policies which satisfy Denning's axioms, we will see
+there are legitimate information 
+ow policies which do not satisfy these axioms.
+Denning's rst axiom requires that the set of security classes is nite, and needs little
+justication. It should be kept in mind that the axiom applies to security classes, and not
+to the ob jects in a system. Denning's axioms allow for ob jects to be created and destroyed
+dynamically, with no bound on the number of ob jects that can be created.
+Denning's second axiom states that ! is a partial order on SC. A partial order is a
+re
+exive, transitive and anti-symmetric binary relation. We have already seen the need for
+re
+exivity in context of example 1, whereby A ! A for all A 2 SC. Transitivity requires
+that if A ! B and B ! C then A ! C, i.e., if indirect information 
+ow is possible from
+A to C via B then we should allow direct information 
+ow from A to C. This is a very
+reasonable requirement in most situations.1
+Finally, anti-symmetry requires that if A ! B
+and B ! A then A = B. Given the re
+exive and transitive requirements, anti-symmetry
+merely eliminates redundant security classes. In other words, there is no point having two
+dierent security labels if ob jects with these labels are restricted to having exactly the same
+information 
+ows.
+Denning's third axiom requires that SC has a lower bound L (for system low), i.e.,
+L ! A for all A 2 SC. This axiom acknowledges the existence of public information in the
+system. Public information allows for desirable features such as public bulletin boards and
+databases, which users expect to nd in any modern computer system. From a theoretical
+perspective, one can argue that information from constants should be allowed to 
+ow to
+any other ob ject; so constants should be labeled L. A concrete example of such a constant
+would be version information about the ope

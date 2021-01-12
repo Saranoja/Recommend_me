@@ -1,0 +1,65 @@
+SE Android [48] prototypes SELinux for Android’s
+Linux kernel and aims to demonstrate the value of
+SELinux in defending against various root exploits
+and application vulnerabilities. Specifically, it confines system Services and apps in different kernelspace
+security domains even isolating apps from one another by the use of the Multi-Level Security (MLS)
+feature of SELinux. To this end, the SE Android
+developers started writing an Android-specific policy
+from scratch. In addition, SE Android provides a
+few key security extensions tailored for the Android
+OS. For instance, it labels application processes with
+SELinux-specific security contexts which are later
+used in type enforcement. Moreover, since (in the
+majority of cases) it is a priori unknown during policy
+writing which apps will be installed on the system
+later, SE Android employs a mechanism to derive the
+security context of an app at install-time. Based on
+criteria, such as the requested permissions, apps are
+assigned a security type. This mapping from application meta-information to security types is defined
+in the SE Android policy.
+Additionally, SE Android provides limited support
+for MAC policy enforcement at the Android middleware layer (MMAC) and we explain these particular
+features in Section 7.2 and provide a comparison to
+our FlaskDroid architecture.
+3 Requirements Analysis for Android
+Security Architectures
+3.1 Adversary Model
+We consider a strong adversary with the goal to get
+access to sensitive data as well as to compromise
+system or third-party apps. Thus, we consider an
+adversary that is able to launch software attacks on
+different layers of the Android software stack.
+3.1.1 Middleware Layer
+Recently, different attacks operating at Android’s
+middleware layer have been reported:
+Overprivileged 3rd party apps and libraries
+threatening user privacy by adopting questionable
+privacy practices (e.g. WhatsApp [6] or Path [23]).
+Moreover, advertisement libraries, frequently included in 3rd party apps have been shown to exploit
+the permissions of their host app to collect information about the user [25].
+Malicious 3rd party apps [22] leverage dangerous
+permissions to cause financial harm to the user (e.g.,
+sending premium SMS) and exfiltrate user-private
+information [57, 40].
+Confused deputy attacks concern malicious apps,
+which leverage unprotected interfaces of benign system [20, 41] and 3rd party [16, 56] apps (denoted
+deputies) to escalate their privileges.
+Collusion attacks concern malicious apps that collude using covert or overt channels [8, 34] in order to
+gain a permission set which has not been approved
+by the user (e.g. the Soundcomber attack [46]).
+Sensory malware leverages the information from
+onboard sensors, like accelerometer data, to derive
+privacy sensitive information, like user input [53, 12].
+3.1.2 Root Exploits
+Besides attacks at Android’s middleware layer, various privilege escalation attacks on lower layers of the
+Android software stack have been reported [55, 40]
+which grant the attacker root (i.e., administrative)
+privileges and can be used to bypass the Android permission framework. For instance, he can bypass the
+ContactsProvider permission checks by accessing the
+contacts database file directly. Moreover, processes
+on Android executing with root privileges inherit all
+available permissions at middleware layer.
+It should be noted that attacks targeting vulnerabilities of the Linux kernel are out of scope of this
+paper, since SE Android is a building block in our
+architecture (see Section 4) and as part of the kernel
+it is susceptible to kernel exploits.
