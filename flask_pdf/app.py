@@ -4,6 +4,8 @@ import re
 from pdfminer.high_level import extract_text
 import io
 import keywords_retriever
+import books_mappings
+from buckets import ChaptersRetriever
 
 app = Flask(__name__)
 
@@ -44,8 +46,27 @@ def PDF_to_keywords():
     text = extract_text(pdf_file)
 
     keywords_set = keywords_retriever.get_keywords(text)
+    expanded_keywords_set = keywords_retriever.expand_keyphrases_dict(keywords_set)
 
-    return jsonify(keywords_set), 200
+    return jsonify(expanded_keywords_set), 200
+
+
+@app.route("/further-reading/<subject_id>", methods=["POST"])
+def get_further_reading(subject_id):
+    pdf_file = io.BytesIO(request.get_data())
+    text = extract_text(pdf_file)
+
+    keywords_set = keywords_retriever.get_keywords(text)
+    expanded_keywords_set = keywords_retriever.expand_keyphrases_dict(keywords_set)
+
+    books = books_mappings.get_books_on_subject(subject_id)
+
+    retriever = ChaptersRetriever(books, expanded_keywords_set)
+
+    top_reads = retriever.get_top_chapters()
+    print(top_reads)
+
+    return jsonify(top_reads), 200
 
 
 app.run()

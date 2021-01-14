@@ -27,14 +27,14 @@ text3 = """The Domain Name System (DNS) is a hierarchical and decentralized nami
 The Domain Name System delegates the responsibility of assigning domain names and mapping those names to Internet resources by designating authoritative name servers for each domain. Network administrators may delegate authority over sub-domains of their allocated name space to other name servers. This mechanism provides distributed and fault-tolerant service and was designed to avoid a single large central database.
 The Domain Name System also specifies the technical functionality of the database service that is at its core. It defines the DNS protocol, a detailed specification of the data structures and data communication exchanges used in the DNS, as part of the Internet Protocol Suite."""
 
-with open('example1.txt', encoding="utf-8") as text11:
+with open('internet_texts_examples/example1.txt', encoding="utf-8") as text11:
     print(textstat.flesch_reading_ease(text11.read()))
 
-with open('example2.txt', encoding="utf-8") as text22:
+with open('internet_texts_examples/example2.txt', encoding="utf-8") as text22:
     print(textstat.flesch_reading_ease(text22.read()))
 
-with open('example3.txt', encoding="utf-8") as text33:
+with open('internet_texts_examples/example3.txt', encoding="utf-8") as text33:
     print(textstat.flesch_reading_ease(text33.read()))
 
-with open('example4.txt', encoding="utf-8") as text44:
+with open('internet_texts_examples/example4.txt', encoding="utf-8") as text44:
     print(textstat.flesch_reading_ease(text44.read()))
