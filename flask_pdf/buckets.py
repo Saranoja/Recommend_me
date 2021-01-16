@@ -21,8 +21,7 @@ class ChaptersRetriever:
             if int(len(list_buckets_with_score_sorted) * 0.05) >= 2:
                 no_of_buckets = int(len(list_buckets_with_score_sorted) * 0.05)
 
-            top_buckets = OrderedDict(list_buckets_with_score_sorted)
-            # top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
+            top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
             chapters[book] = top_buckets
         return chapters
 
@@ -59,7 +58,7 @@ class ChaptersRetriever:
                         for i in range(page_text.count(keyword)):
                             word_cluster.append(keyword)
 
-                if no_of_words_on_current_page > int(len(self.keyphrases) * 0.1):
+                if no_of_words_on_current_page > int(len(self.keyphrases) * 0.13):
                     is_page_empty = False
 
                 if is_page_empty:
@@ -67,7 +66,8 @@ class ChaptersRetriever:
 
                 if no_of_empty_pages == 1:
                     last_page_of_cluster = page_number
-                    buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = word_cluster
+                    if first_page_of_cluster < last_page_of_cluster:
+                        buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = word_cluster
                     word_cluster = []
-        # print(f'buckets={buckets}')
+        # print(f'buckets={json.dumps(buckets)}')
         return buckets
