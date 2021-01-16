@@ -4,8 +4,8 @@ import json
 
 
 class ChaptersRetriever:
-    def __init__(self, books_names, word_rank):
-        self.book_names = books_names
+    def __init__(self, book_names, word_rank):
+        self.book_names = book_names
         self.word_rank = word_rank
         self.keyphrases = list(word_rank.keys())
 
@@ -21,7 +21,8 @@ class ChaptersRetriever:
             if int(len(list_buckets_with_score_sorted) * 0.05) >= 2:
                 no_of_buckets = int(len(list_buckets_with_score_sorted) * 0.05)
 
-            top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
+            top_buckets = OrderedDict(list_buckets_with_score_sorted)
+            # top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
             chapters[book] = top_buckets
         return chapters
 
@@ -34,32 +35,31 @@ class ChaptersRetriever:
     def _create_buckets(self, pdf_file_path: str):
         buckets = {}
         with open(pdf_file_path, "rb") as pdf_file:
-            pdf = reader(pdf_file)
-            pages = pdf.getNumPages()
+            pdf_reader = reader(pdf_file)
+            pages = pdf_reader.getNumPages()
             print(f"Analyzing book: {pdf_file_path} ...")
             print(f"Number of pages: {pages}")
 
-            words_cluster = list()
             first_page_of_cluster = 10
 
+            word_cluster = []
             no_of_empty_pages = 0
             for page_number in range(10, pages - 50):
-                page = pdf.getPage(page_number)
-                page_text = page.extractText()
+                page_text: str = pdf_reader.getPage(page_number).extractText().lower()
+                page_number += 1  # make page_number correspond to page from PDF viewer
 
                 is_page_empty = True
-                number_of_words_on_current_page = 0
-
-                for word in self.keyphrases:
-                    if word.lower() in page_text.lower():
-                        number_of_words_on_current_page += 1
-                        if len(words_cluster) == 0:
-                            first_page_of_cluster = page_number + 1
+                no_of_words_on_current_page = 0
+                for keyword in self.keyphrases:
+                    if keyword in page_text:
+                        no_of_words_on_current_page += 1
                         no_of_empty_pages = 0
-                        for i in range(page_text.lower().count(word.lower())):
-                            words_cluster.append(word)
+                        if len(word_cluster) == 0:
+                            first_page_of_cluster = page_number
+                        for i in range(page_text.count(keyword)):
+                            word_cluster.append(keyword)
 
-                if number_of_words_on_current_page > int(len(self.keyphrases) * 0.1):
+                if no_of_words_on_current_page > int(len(self.keyphrases) * 0.1):
                     is_page_empty = False
 
                 if is_page_empty:
@@ -67,6 +67,7 @@ class ChaptersRetriever:
 
                 if no_of_empty_pages == 1:
                     last_page_of_cluster = page_number
-                    buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = words_cluster
-                    words_cluster = list()
+                    buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = word_cluster
+                    word_cluster = []
+        # print(f'buckets={buckets}')
         return buckets

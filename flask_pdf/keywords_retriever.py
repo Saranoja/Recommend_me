@@ -20,8 +20,7 @@ def get_keyphrases_rank(text, no_of_keyphrases=20):
 
     # examine the top k-ranked phrases in the document
     # keyword_sentences = [p.text for phrase_number, p in enumerate(doc._.phrases) if phrase_number < keywords_number]
-
-    keyphrase_rank = {p.text: p.rank for phrase_index, p in enumerate(doc._.phrases) if
+    keyphrase_rank = {p.text.lower(): p.rank for phrase_index, p in enumerate(doc._.phrases) if
                       phrase_index < no_of_keyphrases}
 
     return keyphrase_rank

@@ -16,4 +16,4 @@ def get_books_from_subject(subject: str) -> List[str]:
         for dictionary in books_json:
             if subject.lower() in dictionary["subjects"]:
                 return dictionary["books"]
-            # books = [d['name'] for d in books_json if d['subject'] == subject]
+        return []
