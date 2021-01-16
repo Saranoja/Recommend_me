@@ -1,4 +1,6 @@
 from PyPDF2 import PdfFileReader as reader
+from collections import OrderedDict
+import json
 
 
 class ChaptersRetriever:
@@ -10,14 +12,16 @@ class ChaptersRetriever:
     def get_top_chapters(self):
         chapters = {}
         for book in self.book_names:
-            pdf_document = f'books/{book}.pdf'
-            buckets = self._create_buckets(pdf_document)
-            sorted_words = sorted(buckets.items(), key=lambda item: self._get_bucket_score(item[1]), reverse=True)
-            if int(len(sorted_words) * 0.05) >= 2:
-                no_of_buckets = int(len(sorted_words) * 0.05)
-            else:
-                no_of_buckets = 2
-            top_buckets = [bucket[0] for index, bucket in enumerate(sorted_words) if index < no_of_buckets]
+            pdf_file_path = f'books/{book}.pdf'
+            buckets_with_word_cluster = self._create_buckets(pdf_file_path)
+            buckets_with_score = {bucket: self._get_bucket_score(word_cluster)
+                                  for bucket, word_cluster in buckets_with_word_cluster.items()}
+            list_buckets_with_score_sorted = sorted(buckets_with_score.items(), key=lambda item: item[1], reverse=True)
+            no_of_buckets = 2
+            if int(len(list_buckets_with_score_sorted) * 0.05) >= 2:
+                no_of_buckets = int(len(list_buckets_with_score_sorted) * 0.05)
+
+            top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
             chapters[book] = top_buckets
         return chapters
 
@@ -32,7 +36,7 @@ class ChaptersRetriever:
         with open(pdf_file_path, "rb") as pdf_file:
             pdf = reader(pdf_file)
             pages = pdf.getNumPages()
-            print(f"Analyzing book: {pdf_file_path}...")
+            print(f"Analyzing book: {pdf_file_path} ...")
             print(f"Number of pages: {pages}")
 
             words_cluster = list()
@@ -65,4 +69,4 @@ class ChaptersRetriever:
                     last_page_of_cluster = page_number
                     buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = words_cluster
                     words_cluster = list()
-            return buckets
+        return buckets

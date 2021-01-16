@@ -6,6 +6,7 @@ import io
 import keywords_retriever
 import books_mappings
 from buckets import ChaptersRetriever
+import json
 
 app = Flask(__name__)
 
@@ -57,14 +58,15 @@ def get_further_reading(subject_id):
     pdf_text = extract_text(pdf_file)
 
     keyphrases_rank = keywords_retriever.get_keyphrases_rank(pdf_text)
-    expanded_keyphrases_rank_set = keywords_retriever.expand_keyphrases_dict(keyphrases_rank)
+    expanded_keyphrases_rank = keywords_retriever.expand_keyphrases_dict(keyphrases_rank)
 
     books = books_mappings.get_books_from_subject(subject_id)
-    retriever = ChaptersRetriever(books, expanded_keyphrases_rank_set)
+    retriever = ChaptersRetriever(books, expanded_keyphrases_rank)
     top_reads = retriever.get_top_chapters()
     print(top_reads)
 
-    return jsonify(top_reads), 200
+    # response = app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
+    return app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
 
 
 app.run()
