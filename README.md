@@ -40,6 +40,79 @@ _Recommend ME_ was thought to be a tool designed for the Computer Science studen
 
 _Recommend ME_ uses NLP in order to analyze either lecture notes or descriptions of them so as to find references in the top profile books, offering students precise coordinates of where to search for the information they need.
 
+We start by extracting key phrases from the lecture notes using _pytextrank_, assigning a relevance score to each of them at the same time. For instance, for the Planar Graphs lecture, a dictionary of the most relevant key phrases together with their scores may look like this:
+
+```
+{
+    "a connected bipartite planar graph": 0.05415530592941251,
+    "a connected planar graph": 0.05434663483288733,
+    "a graph g": 0.053073150541127476,
+    "a maximal planar graph": 0.0527544211462139,
+    "bipartite planar graph": 0.07970435570092213,
+    "circuit": 0.0299791670686525,
+    "faces": 0.053330544440336004,
+    "m edges": 0.053962214210097434,
+    "most 2pn vertices": 0.061278561234393715,
+    "planar graphs": 0.07299307717342685,
+    "planar graphs drawing": 0.05910894331652115,
+    "point": 0.023979167068652496,
+    "points": 0.05205383401726972,
+}
+```
+Note: we removed most of the noisy data in this example, since it doesn't really affect the outcome.
+
+We then expand this dictionary by adding substrings of the key phrases in order to increase the probability of finding the desired references. The assigned scores for these keywords will be proportional with the _relevance_ of the key phrase they come from, starting with the _mean_ of the initial scores.
+
+Note #2: Our heuristic is based on the fact that finding an exact match for the phrase _planar graphs_ is a lot more "valuable" than just finding matches for the word "graphs" - which is extremely likely to have a more uniform distribution. However, finding the word _planar_ alone, should still be more "valuable" than finding the word "point", for instance - thus, the balance: **even _a sequence_ of the highest rated key phrase is more relevant than the lowest rated one, but still not as relevant as the mean value.**
+
+```
+{
+    "a connected bipartite planar graph": 0.05415530592941251,
+    "a connected planar graph": 0.05434663483288733,
+    "a graph g": 0.053073150541127476,
+    "a maximal planar graph": 0.0527544211462139,
+    "bipartite": 0.04997916706865252,
+    "bipartite planar graph": 0.07970435570092213,
+    "circuit": 0.0299791670686525,
+    "connected": 0.025979167068652498,
+    "drawing": 0.0319791670686525,
+    "edges": 0.05511474641097551,
+    "faces": 0.053330544440336004,
+    "graph": 0.06768150124029548,
+    "graphs": 0.04797916706865252,
+    "m edges": 0.053962214210097434,
+    "maximal": 0.013979167068652489,
+    "most 2pn vertices": 0.061278561234393715,
+    "planar": 0.04997916706865252,
+    "planar graphs": 0.07299307717342685,
+    "planar graphs drawing": 0.05910894331652115,
+    "point": 0.023979167068652496,
+    "points": 0.05205383401726972,
+    "vertices": 0.06612472131247861
+}
+```
+
+Below you can find the distribution of the most relevant keywords from the _Planar Graphs_ lecture notes across the book _"Graph Theory" by Reinhard Diestel_, as calculated after extracting the text from the Electronic Edition PDF.
+
+<br>
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1aKDHPXDjkp-lyMJYMaiAe-566oAR4q39" frameborder="0" width="100%" height="536.9850435256958" allowtransparency="true"></iframe>
+
+What is noticeable is that, except for the word _planar_, all the other words seem to have pretty uniform distributions and this is where the heuristic we have proposed has a significant impact. Therefore, our goal becomes to calculate and point out the _"best"_ clusters of keywords found in the book - this is where the content related to the lecture should be found.
+
+## Implementation details
+
+After creating mappings for different courses and books as a basis, the idea is to create so-called _dynamic buckets_ of potential content that matches the PDF subject to a certain chapter of a profile book.
+What we are looking for in a bucket is, in fact, a "condensed" crowd of meaningful words, which ideally has a weighted sum high enough to be considered an option for a recommendation. The more keywords and the more relevant they are, the better the bucket.
+
+Below is a representation of the best 7 such buckets, with respect to their accumulated score. There is, of course, the first bucket (between pages 73-102) which stands out due to the initially assigned weights and this is the case for most of the scenarios, since usually there is one dedicated chapter for each topic in a book.
+
+<br>
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1Y8i1eLO8YR0WCI4PxEDAeeNYz7CIReuv" frameborder="0" width="100%" height="524.9957275390625" allowtransparency="true"></iframe>
 <br>
 
-<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1aKDHPXDjkp-lyMJYMaiAe-566oAR4q39" frameborder="0" width="100%" height="536.989316701889" allowtransparency="true"></iframe>
+
+
+
+<img src="res/Flesch-Kincaid.svg"
+alt="graph"
+style="width: 70%; height: 100%" />
