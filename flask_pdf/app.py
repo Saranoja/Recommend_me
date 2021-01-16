@@ -5,7 +5,7 @@ from pdfminer.high_level import extract_text
 import io
 import keywords_retriever
 import books_mappings
-from buckets import ChaptersRetriever
+from buckets import SuggestionRetriever
 import json
 
 app = Flask(__name__)
@@ -52,8 +52,8 @@ def PDF_to_keywords():
     return jsonify(expanded_keywords_set), 200
 
 
-@app.route("/further-reading/<subject_id>", methods=["POST"])
-def get_further_reading(subject_id):
+@app.route("/further-reading/<subject_id>/pdf", methods=["POST"])
+def get_further_reading_source(subject_id):
     pdf_file = io.BytesIO(request.get_data())
     pdf_text = extract_text(pdf_file)
 
@@ -61,11 +61,26 @@ def get_further_reading(subject_id):
     expanded_keyphrases_rank = keywords_retriever.expand_keyphrases_dict(keyphrases_rank)
 
     books = books_mappings.get_books_from_subject(subject_id)
-    retriever = ChaptersRetriever(books, expanded_keyphrases_rank)
-    top_reads = retriever.get_top_chapters()
+    retriever = SuggestionRetriever(books, expanded_keyphrases_rank)
+    top_reads = retriever.get_top_suggestions()
     print(top_reads)
 
-    # response = app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
+    return app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
+
+
+@app.route("/further-reading/<subject_id>/keyphrases", methods=["POST"])
+def get_further_reading_keywords(subject_id):
+    keyphrases_rank = request.get_json()
+    print(keyphrases_rank)
+
+    expanded_keyphrases_rank = keywords_retriever.expand_keyphrases_dict(keyphrases_rank)
+    print(expanded_keyphrases_rank)
+
+    books = books_mappings.get_books_from_subject(subject_id)
+    retriever = SuggestionRetriever(books, expanded_keyphrases_rank)
+    top_reads = retriever.get_top_suggestions()
+    print(top_reads)
+
     return app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
 
 

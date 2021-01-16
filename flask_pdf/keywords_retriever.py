@@ -27,13 +27,14 @@ def get_keyphrases_rank(text, no_of_keyphrases=20):
 
 
 def expand_keyphrases_dict(keyphrases_rank: dict) -> dict:
-    mean_rank = mean(keyphrases_rank.values()) - 0.01
+    mean_rank = mean(keyphrases_rank.values())
+    mean_rank -= 0.1 * mean_rank
     expanded_keyphrases_rank_set = keyphrases_rank.copy()
 
     for keyphrase in keyphrases_rank.keys():
         for keyword in word_tokenizer.findall(keyphrase):
             if keyword not in stopwords_english and keyword not in expanded_keyphrases_rank_set:
                 expanded_keyphrases_rank_set[keyword] = mean_rank
-        mean_rank -= 0.002
+        mean_rank -= 0.05 * mean_rank
 
     return expanded_keyphrases_rank_set

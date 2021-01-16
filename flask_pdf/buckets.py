@@ -3,13 +3,13 @@ from collections import OrderedDict
 import json
 
 
-class ChaptersRetriever:
+class SuggestionRetriever:
     def __init__(self, book_names, word_rank):
         self.book_names = book_names
         self.word_rank = word_rank
         self.keyphrases = list(word_rank.keys())
 
-    def get_top_chapters(self):
+    def get_top_suggestions(self):
         chapters = {}
         for book in self.book_names:
             pdf_file_path = f'books/{book}.pdf'
@@ -17,8 +17,8 @@ class ChaptersRetriever:
             buckets_with_score = {bucket: self._get_bucket_score(word_cluster)
                                   for bucket, word_cluster in buckets_with_word_cluster.items()}
             list_buckets_with_score_sorted = sorted(buckets_with_score.items(), key=lambda item: item[1], reverse=True)
-            no_of_buckets = 2
-            if int(len(list_buckets_with_score_sorted) * 0.05) >= 2:
+            no_of_buckets = 3
+            if int(len(list_buckets_with_score_sorted) * 0.05) >= 3:
                 no_of_buckets = int(len(list_buckets_with_score_sorted) * 0.05)
 
             top_buckets = OrderedDict(list_buckets_with_score_sorted[0:no_of_buckets])
