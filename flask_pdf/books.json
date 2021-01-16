@@ -1,38 +1,71 @@
 [
   {
-    "subject": "AG",
-    "name": "Diestel-Graph-Theory"
+    "subjects": [
+      "ga",
+      "graph-algorithms"
+    ],
+    "books": [
+      "Diestel-Graph-Theory"
+    ]
   },
   {
-    "subject": "CN",
-    "name": "Computer_Networking_A_Top_Down_Approach"
+    "subjects": [
+      "cn",
+      "computer-networks"
+    ],
+    "books": [
+      "Computer_Networking_A_Top_Down_Approach"
+    ]
   },
   {
-    "subject": "ACSO",
-    "name": "Computer_Architecture_A_Quantitative_Approach"
+    "subjects": [
+      "acso"
+    ],
+    "books": [
+      "Computer_Architecture_A_Quantitative_Approach"
+    ]
   },
   {
-    "subject": "SD",
-    "name": "Introduction_to_Algorithms(Cormen)"
+    "subjects": [
+      "sd",
+      "structuri-de-date",
+      "data-structures"
+    ],
+    "books": [
+      "Introduction_to_Algorithms(Cormen)",
+      "The_Algorithm_Design_Manual"
+    ]
   },
   {
-    "subject": "SD",
-    "name": "The_Algorithm_Design_Manual"
+    "subjects": [
+      "is"
+    ],
+    "books": [
+      "Introduction_to_Computer_Security"
+    ]
   },
   {
-    "subject": "IS",
-    "name": "Introduction_to_Computer_Security"
+    "subjects": [
+      "ic"
+    ],
+    "books": [
+      "Introduction_to_Modern_Cryptography"
+    ]
   },
   {
-    "subject": "IC",
-    "name": "Introduction_to_Modern_Cryptography"
+    "subjects": [
+      "so"
+    ],
+    "books": [
+      "Modern_Operating_Systems"
+    ]
   },
   {
-    "subject": "SO",
-    "name": "Modern_Operating_Systems"
-  },
-  {
-    "subject": "PA",
-    "name": "The_Algorithm_Design_Manual"
+    "subjects": [
+      "pa"
+    ],
+    "books": [
+      "The_Algorithm_Design_Manual"
+    ]
   }
 ]

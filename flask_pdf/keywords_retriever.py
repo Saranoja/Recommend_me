@@ -8,21 +8,7 @@ with open("stopwords_english.txt", encoding="utf-8") as stopwords_file:
     stopwords_english = stopwords_file.read().split("\n")
 
 
-def expand_keyphrases_dict(keyphrases_dict: dict) -> dict:
-    mean_rank = mean(keyphrases_dict.values()) - 0.01
-
-    keywords = keyphrases_dict.copy()
-
-    for keyword_sentence in keyphrases_dict.keys():
-        for keyword in word_tokenizer.findall(keyword_sentence):
-            if keyword not in stopwords_english:
-                keywords[keyword] = mean_rank
-        mean_rank -= 0.002
-
-    return keywords
-
-
-def get_keywords(text, keywords_number=20):
+def get_keyphrases_rank(text, no_of_keyphrases=20):
     # load a spaCy model, depending on language, scale, etc.
     nlp = spacy.load("en_core_web_sm")
 
@@ -35,7 +21,20 @@ def get_keywords(text, keywords_number=20):
     # examine the top k-ranked phrases in the document
     # keyword_sentences = [p.text for phrase_number, p in enumerate(doc._.phrases) if phrase_number < keywords_number]
 
-    keywords_ranks = {p.text: p.rank for phrase_number, p in enumerate(doc._.phrases) if
-                      phrase_number < keywords_number}
+    keyphrase_rank = {p.text: p.rank for phrase_index, p in enumerate(doc._.phrases) if
+                      phrase_index < no_of_keyphrases}
 
-    return keywords_ranks
+    return keyphrase_rank
+
+
+def expand_keyphrases_dict(keyphrases_rank: dict) -> dict:
+    mean_rank = mean(keyphrases_rank.values()) - 0.01
+    expanded_keyphrases_rank_set = keyphrases_rank.copy()
+
+    for keyphrase in keyphrases_rank.keys():
+        for keyword in word_tokenizer.findall(keyphrase):
+            if keyword not in stopwords_english and keyword not in expanded_keyphrases_rank_set:
+                expanded_keyphrases_rank_set[keyword] = mean_rank
+        mean_rank -= 0.002
+
+    return expanded_keyphrases_rank_set

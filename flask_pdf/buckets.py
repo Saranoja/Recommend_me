@@ -2,25 +2,38 @@ from PyPDF2 import PdfFileReader as reader
 
 
 class ChaptersRetriever:
-    def __init__(self, books_names, words_ranks):
-        self.books_names = books_names
-        self.words_ranks = words_ranks
-        self.keyphrases = list(words_ranks.keys())
+    def __init__(self, books_names, word_rank):
+        self.book_names = books_names
+        self.word_rank = word_rank
+        self.keyphrases = list(word_rank.keys())
 
-    def _get_bucket_score(self, bucket_words, ranks_dict):
+    def get_top_chapters(self):
+        chapters = {}
+        for book in self.book_names:
+            pdf_document = f'books/{book}.pdf'
+            buckets = self._create_buckets(pdf_document)
+            sorted_words = sorted(buckets.items(), key=lambda item: self._get_bucket_score(item[1]), reverse=True)
+            if int(len(sorted_words) * 0.05) >= 2:
+                no_of_buckets = int(len(sorted_words) * 0.05)
+            else:
+                no_of_buckets = 2
+            top_buckets = [bucket[0] for index, bucket in enumerate(sorted_words) if index < no_of_buckets]
+            chapters[book] = top_buckets
+        return chapters
+
+    def _get_bucket_score(self, bucket_words):
         score = 0
         for word in bucket_words:
-            score += ranks_dict[word]
+            score += self.word_rank[word]
         return score
 
-    def _create_buckets(self, pdf_document: str):
-        buckets = dict()
-        with open(pdf_document, "rb") as file_handle:
-            pdf = reader(file_handle)
+    def _create_buckets(self, pdf_file_path: str):
+        buckets = {}
+        with open(pdf_file_path, "rb") as pdf_file:
+            pdf = reader(pdf_file)
             pages = pdf.getNumPages()
-
-            print("Number of pages: %i" % pages)
-            print("Starting analyzing book...")
+            print(f"Analyzing book: {pdf_file_path}...")
+            print(f"Number of pages: {pages}")
 
             words_cluster = list()
             first_page_of_cluster = 10
@@ -53,18 +66,3 @@ class ChaptersRetriever:
                     buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = words_cluster
                     words_cluster = list()
             return buckets
-
-    def get_top_chapters(self):
-        chapters = dict()
-        for book in self.books_names:
-            pdf_document = f'books/{book}.pdf'
-            buckets = self._create_buckets(pdf_document)
-            sorted_words = sorted(buckets.items(), key=lambda item: self._get_bucket_score(item[1], self.words_ranks),
-                                  reverse=True)
-            if int(len(sorted_words) * 0.05) >= 2:
-                no_of_buckets = int(len(sorted_words) * 0.05)
-            else:
-                no_of_buckets = 2
-            top_buckets = [bucket[0] for index, bucket in enumerate(sorted_words) if index < no_of_buckets]
-            chapters[book] = top_buckets
-        return chapters

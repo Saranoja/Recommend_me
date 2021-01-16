@@ -7,10 +7,13 @@
 # for document in cursor:
 #     print(document)
 import json
+from typing import List
 
 
-def get_books_on_subject(subject):
+def get_books_from_subject(subject: str) -> List[str]:
     with open('books.json') as books_file:
         books_json = json.loads(books_file.read())
-        books = [book['name'] for book in books_json if book['subject'] == subject]
-        return books
+        for dictionary in books_json:
+            if subject.lower() in dictionary["subjects"]:
+                return dictionary["books"]
+            # books = [d['name'] for d in books_json if d['subject'] == subject]

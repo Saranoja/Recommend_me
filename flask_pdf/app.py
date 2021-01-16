@@ -45,7 +45,7 @@ def PDF_to_keywords():
     pdf_file = io.BytesIO(request.get_data())
     text = extract_text(pdf_file)
 
-    keywords_set = keywords_retriever.get_keywords(text)
+    keywords_set = keywords_retriever.get_keyphrases_rank(text)
     expanded_keywords_set = keywords_retriever.expand_keyphrases_dict(keywords_set)
 
     return jsonify(expanded_keywords_set), 200
@@ -54,15 +54,13 @@ def PDF_to_keywords():
 @app.route("/further-reading/<subject_id>", methods=["POST"])
 def get_further_reading(subject_id):
     pdf_file = io.BytesIO(request.get_data())
-    text = extract_text(pdf_file)
+    pdf_text = extract_text(pdf_file)
 
-    keywords_set = keywords_retriever.get_keywords(text)
-    expanded_keywords_set = keywords_retriever.expand_keyphrases_dict(keywords_set)
+    keyphrases_rank = keywords_retriever.get_keyphrases_rank(pdf_text)
+    expanded_keyphrases_rank_set = keywords_retriever.expand_keyphrases_dict(keyphrases_rank)
 
-    books = books_mappings.get_books_on_subject(subject_id)
-
-    retriever = ChaptersRetriever(books, expanded_keywords_set)
-
+    books = books_mappings.get_books_from_subject(subject_id)
+    retriever = ChaptersRetriever(books, expanded_keyphrases_rank_set)
     top_reads = retriever.get_top_chapters()
     print(top_reads)
 
