@@ -1,7 +1,4 @@
 from PyPDF2 import PdfFileReader as reader
-import re
-
-word_tokenizer = re.compile("[A-Z]{2,}(?![a-z])|[A-Z][a-z]+(?=[A-Z])|[\'\w\-]+")
 
 
 class ChaptersRetriever:
@@ -32,7 +29,6 @@ class ChaptersRetriever:
             for page_number in range(10, pages - 50):
                 page = pdf.getPage(page_number)
                 page_text = page.extractText()
-                total_words = len(word_tokenizer.findall(page_text))
 
                 is_page_empty = True
                 number_of_words_on_current_page = 0
@@ -46,7 +42,7 @@ class ChaptersRetriever:
                         for i in range(page_text.lower().count(word.lower())):
                             words_cluster.append(word)
 
-                if number_of_words_on_current_page > total_words * 0.03:
+                if number_of_words_on_current_page > int(len(self.keyphrases) * 0.1):
                     is_page_empty = False
 
                 if is_page_empty:
@@ -65,8 +61,8 @@ class ChaptersRetriever:
             buckets = self._create_buckets(pdf_document)
             sorted_words = sorted(buckets.items(), key=lambda item: self._get_bucket_score(item[1], self.words_ranks),
                                   reverse=True)
-            if int(len(sorted_words) * 0.01) >= 2:
-                no_of_buckets = int(len(sorted_words) * 0.01)
+            if int(len(sorted_words) * 0.05) >= 2:
+                no_of_buckets = int(len(sorted_words) * 0.05)
             else:
                 no_of_buckets = 2
             top_buckets = [bucket[0] for index, bucket in enumerate(sorted_words) if index < no_of_buckets]
