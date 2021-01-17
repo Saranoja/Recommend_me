@@ -4,10 +4,13 @@ import re
 from pdfminer.high_level import extract_text
 import io
 import keywords_retriever
+import articles_retriever
 import books_mappings
 from buckets import SuggestionRetriever
 import json
+import requests
 
+arxiv_api_url = "http://export.arxiv.org/api/query?max_results=10&search_query=ti:"
 app = Flask(__name__)
 
 
@@ -53,7 +56,7 @@ def PDF_to_keywords():
 
 
 @app.route("/further-reading/<subject_id>/pdf", methods=["POST"])
-def get_further_reading_source(subject_id):
+def post_further_reading_source(subject_id):
     pdf_file = io.BytesIO(request.get_data())
     pdf_text = extract_text(pdf_file)
 
@@ -68,8 +71,8 @@ def get_further_reading_source(subject_id):
     return app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
 
 
-@app.route("/further-reading/<subject_id>/keyphrases", methods=["POST"])
-def get_further_reading_keywords(subject_id):
+@app.route("/further-reading/<subject_id>/keyphrase", methods=["POST"])
+def post_further_reading_keyphrase(subject_id):
     keyphrases_rank = request.get_json()
     print(keyphrases_rank)
 
@@ -82,6 +85,31 @@ def get_further_reading_keywords(subject_id):
     print(top_reads)
 
     return app.response_class(response=json.dumps(top_reads), status=200, mimetype='application/json')
+
+
+@app.route("/academic-papers/keyphrase", methods=["POST"])
+def post_academic_papers_keyphrase():
+    """Perform title search on arXiv's API"""
+    keyphrases_rank: dict = request.get_json()
+    print(keyphrases_rank)
+
+    response_list = []
+    for keyphrase in keyphrases_rank:
+        # encode spaces
+        keyphrase: str = keyphrase.replace(' ', '%20')
+        # exact keyphrase
+        #
+        #
+        #
+        #
+        # search
+        keyphrase = f'"{keyphrase}"'
+
+        xml_string = requests.get(arxiv_api_url + keyphrase).text
+        response_list.extend(articles_retriever.parse_response(xml_string))
+
+    print(len(response_list))
+    return jsonify(response_list), 200
 
 
 app.run()
