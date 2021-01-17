@@ -1,0 +1,83 @@
+ag6 - MST - 
+	GRAPH THEORY
+	202-216 (Ramsey Theory for Graphs) 
+	59-72 (Menger's theorem)
+	11-25 (Graphs basics)
+
+
+ag6 - Connectivity + Trees - 
+	GRAPH THEORY
+	11-63 (Graphs basics + Matchings + Connectivity)
+	222-254 (Hamilton Cycles)
+	104-135 (Colouring)
+
+
+sd5 - Trees & Binary Trees -
+	CORMEN
+	291-322 Binary search trees
+        276-290 Binary Search Trees
+        1110-1114 Trees
+
+	AD MANUAL
+	89-96 Binary Search Trees
+	527-529 Drawing Trees
+	566-568 Steiner Tree
+
+
+sd6 - Priority queues -
+	CORMEN
+        161-168 Priority queues
+        152-153 Heapsort
+        319-322 Red-Black Trees
+
+	AD MANUAL
+        383-386 Priority Queues
+        121-125 Heaps
+        396-399 Data structures
+
+
+sd7 - Graphs -
+    CORMEN
+        572-586 Topological sort
+        550-556 Elementary Graph Algorithms (very close score to #1)
+        521-530 Data Structures for Disjoint Sets
+
+    AD MANUAL
+        162-174 Data Structures for Graphs (1 page error)
+        390-395 Graph Data Structures (1 page error)
+        492-502 Topological Sorting (1 page error)
+
+
+sd9 - Searching -
+	CORMEN
+        276-286 Binary Search Trees
+        379-385  Optimal binary search trees
+        317-322 Red-Black Trees Problems
+
+	AD MANUAL
+        87-98  Dictionaries & Binary search trees
+        377-382 Dictionaries
+        121-125 Heaps (from Sorting & Searching chapter)
+
+rc - DNS -
+	157-165 DNS
+	166-171 DNS (could be merged to 1 bucket)
+	371-374 Internet Protocol
+
+
+rc - P2P -
+	830-835 References
+	113-116 Netword Application Architectures (+P2P)
+	618-621 Mutimedia Network Applications
+
+
+ACSO4 - Alpha-numerical Codes
+	1083-1094 Signed Numbers (from Basic Techniques of Integer Arithmetic)
+	1257-1278 References
+	1286-1288 References
+
+
+ACSO7 - Performance parameters I
+	595-603 Cache performance
+	101-112 Memory Hierarchy Design - Introduction
+	1246-1269 References

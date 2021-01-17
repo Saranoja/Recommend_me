@@ -2,7 +2,7 @@
 
 <img src="res/reading.svg"
      alt="intro"
-     style="width: 40%; height: 100%" />
+     style="width: 20%; height: 100%" />
 
 ## The problem
 
@@ -14,21 +14,21 @@ He wants to have a better image of what _planar graphs_ are and how they work. O
 
 <img src="res/formula.svg"
      alt="formula"
-     style="width: 20%; height: 100%" />
+     style="width: 10%; height: 100%" />
+
+<img src="res/formula.svg"
+alt="formula"
+style="width: 20%; height: 100%" />
 
 <img src="res/formula.svg"
 alt="formula"
 style="width: 40%; height: 100%" />
 
-<img src="res/formula.svg"
-alt="formula"
-style="width: 90%; height: 100%" />
-
 Mike has no idea what this means. Mike needs more beginner-like content. Mike is very confused. Mike then sees this image - it's a _Schlegel diagram of a regular dodecahedron, forming a planar graph from a convex polyhedron_:
 
 <img src="res/Dodecahedron_schlegel.svg"
 alt="graph"
-style="width: 70%; height: 100%" />
+style="width: 50%; height: 100%" />
 
 Mike doesn't like it very much and eventually gives up.
 
@@ -110,9 +110,18 @@ Below is a representation of the best 7 such buckets, with respect to their accu
 <iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1Y8i1eLO8YR0WCI4PxEDAeeNYz7CIReuv" frameborder="0" width="100%" height="524.9957275390625" allowtransparency="true"></iframe>
 <br>
 
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1y_1HG9rEwzoaaF16lNzw9XcdruN-nNxq" frameborder="0" width="100%" height="503.98504638671875" allowtransparency="true"></iframe>
 
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1AXatR1dlMHqRv6AQBRGtakbnS9T5GdXb" frameborder="0" width="100%" height="480.99359130859375" allowtransparency="true"></iframe>
 
+## Next steps
+
+For improved accuracy, we have also added an option for the users to choose the keywords they believe describe the best the lecture. This obviously increases the probability of identifying the best #1 cluster as the target section, since the noisy data is, in theory, zero. Of course, this could be extended to another heuristic: _the more numerous and particular the keywords are and the more accurate are their weights, the better the result_.
+
+We also wanted to cover the problem of more "advanced issues" students may be interested in and for this matter we have also provided resources for scholarly articles where further, deeper and more punctual information can be found. arXiv® is a free such distribution service, maintained and operated by _Cornell University_ and this is our source for the research papers. We use the concepts the user is interested in and sort the results depending on how "readable" (advanced) the content is. To implement this, we have used the Flesch-Kincaid readability tests, designed to indicate how difficult a passage in English is to understand. In the FK reading-ease test, higher scores indicate material that is easier to read; lower numbers mark passages that are more difficult to read. The formula for the Flesch reading-ease score (FRES) test is:
+
+<br>
 
 <img src="res/Flesch-Kincaid.svg"
 alt="graph"
-style="width: 70%; height: 100%" />
+style="width: 50%; height: 100%" />
