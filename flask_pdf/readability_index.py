@@ -1,4 +1,16 @@
 from textstat import textstat
+import requests
+from pdfminer.high_level import extract_text
+import io
+
+
+def get_readability_score_from_link(link: str) -> float:
+    pdf_content = requests.get(link).content
+    pdf_file = io.BytesIO(pdf_content)
+    pdf_text = extract_text(pdf_file)
+    # print(pdf_text)
+    return textstat.flesch_reading_ease(pdf_text)
+
 
 text = """In this case, it is easy to see that if we do not maintain the data dependence
 involving R2, we can change the result of the program. Less obvious is the fact
@@ -27,14 +39,15 @@ text3 = """The Domain Name System (DNS) is a hierarchical and decentralized nami
 The Domain Name System delegates the responsibility of assigning domain names and mapping those names to Internet resources by designating authoritative name servers for each domain. Network administrators may delegate authority over sub-domains of their allocated name space to other name servers. This mechanism provides distributed and fault-tolerant service and was designed to avoid a single large central database.
 The Domain Name System also specifies the technical functionality of the database service that is at its core. It defines the DNS protocol, a detailed specification of the data structures and data communication exchanges used in the DNS, as part of the Internet Protocol Suite."""
 
-with open('internet_texts_examples/example1.txt', encoding="utf-8") as text11:
-    print(textstat.flesch_reading_ease(text11.read()))
-
-with open('internet_texts_examples/example2.txt', encoding="utf-8") as text22:
-    print(textstat.flesch_reading_ease(text22.read()))
-
-with open('internet_texts_examples/example3.txt', encoding="utf-8") as text33:
-    print(textstat.flesch_reading_ease(text33.read()))
-
-with open('internet_texts_examples/example4.txt', encoding="utf-8") as text44:
-    print(textstat.flesch_reading_ease(text44.read()))
+# with open('internet_texts_examples/example1.txt', encoding="utf-8") as text11:
+#     print(textstat.flesch_reading_ease(text11.read()))
+#
+# with open('internet_texts_examples/example2.txt', encoding="utf-8") as text22:
+#     print(textstat.flesch_reading_ease(text22.read()))
+#
+# with open('internet_texts_examples/example3.txt', encoding="utf-8") as text33:
+#     print(textstat.flesch_reading_ease(text33.read()))
+#
+# with open('internet_texts_examples/example4.txt', encoding="utf-8") as text44:
+#     print(textstat.flesch_reading_ease(text44.read()))
+#

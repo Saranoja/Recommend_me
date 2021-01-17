@@ -38,9 +38,9 @@ _Recommend ME_ was thought to be a tool designed for the Computer Science studen
 
 ## How it works
 
-_Recommend ME_ uses NLP in order to analyze either lecture notes or descriptions of them so as to find references in the top profile books, offering students precise coordinates of where to search for the information they need.
+_Recommend ME_ uses NLP in order to analyze either lecture notes or descriptions of them so as to find references in the top profile books, offering students precise coordinates of where to search for the information they need. Our algorithm consists of 3 layers of processing.
 
-We start by extracting key phrases from the lecture notes using _pytextrank_, assigning a relevance score to each of them at the same time. For instance, for the Planar Graphs lecture, a dictionary of the most relevant key phrases together with their scores may look like this:
+* We start by extracting key phrases from the lecture notes using _pytextrank_, assigning a relevance score to each of them at the same time. For instance, for the Planar Graphs lecture, a dictionary of the most relevant key phrases together with their scores may look like this:
 
 ```
 {
@@ -61,7 +61,7 @@ We start by extracting key phrases from the lecture notes using _pytextrank_, as
 ```
 Note: we removed most of the noisy data in this example, since it doesn't really affect the outcome.
 
-We then expand this dictionary by adding substrings of the key phrases in order to increase the probability of finding the desired references. The assigned scores for these keywords will be proportional with the _relevance_ of the key phrase they come from, starting with the _mean_ of the initial scores.
+* We then expand this dictionary by adding substrings of the key phrases in order to increase the probability of finding the desired references. The assigned scores for these keywords will be proportional with the _relevance_ of the key phrase they come from, starting with the _mean_ of the initial scores.
 
 Note #2: Our heuristic is based on the fact that finding an exact match for the phrase _planar graphs_ is a lot more "valuable" than just finding matches for the word "graphs" - which is extremely likely to have a more uniform distribution. However, finding the word _planar_ alone, should still be more "valuable" than finding the word "point", for instance - thus, the balance: **even _a sequence_ of the highest rated key phrase is more relevant than the lowest rated one, but still not as relevant as the mean value.**
 
@@ -97,7 +97,7 @@ Below you can find the distribution of the most relevant keywords from the _Plan
 <br>
 <iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1aKDHPXDjkp-lyMJYMaiAe-566oAR4q39" frameborder="0" width="100%" height="536.9850435256958" allowtransparency="true"></iframe>
 
-What is noticeable is that, except for the word _planar_, all the other words seem to have pretty uniform distributions and this is where the heuristic we have proposed has a significant impact. Therefore, our goal becomes to calculate and point out the _"best"_ clusters of keywords found in the book - this is where the content related to the lecture should be found.
+* What is noticeable is that, except for the word _planar_, all the other words seem to have pretty uniform distributions and this is where the heuristic we have proposed has a significant impact. Therefore, our goal becomes to calculate and point out the _"best"_ clusters of keywords found in the book - this is where the content related to the lecture should be found.
 
 ## Implementation details
 
