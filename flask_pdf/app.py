@@ -9,6 +9,7 @@ import books_mappings
 from buckets import SuggestionRetriever
 import json
 import requests
+import readability_index
 
 arxiv_api_url = "http://export.arxiv.org/api/query?max_results=10&search_query=ti:"
 app = Flask(__name__)
@@ -97,19 +98,18 @@ def post_academic_papers_keyphrase():
     for keyphrase in keyphrases_rank:
         # encode spaces
         keyphrase: str = keyphrase.replace(' ', '%20')
-        # exact keyphrase
-        #
-        #
-        #
-        #
-        # search
+        # exact keyphrase search
         keyphrase = f'"{keyphrase}"'
 
         xml_string = requests.get(arxiv_api_url + keyphrase).text
         response_list.extend(articles_retriever.parse_response(xml_string))
 
-    print(len(response_list))
-    return jsonify(response_list), 200
+    # print(json.dumps(response_list, indent=2))
+    response_list = sorted(response_list,
+                           key=lambda x: readability_index.get_readability_score_from_link(x['link']),
+                           reverse=True)
+
+    return app.response_class(response=json.dumps(response_list), status=200, mimetype='application/json')
 
 
 app.run()
