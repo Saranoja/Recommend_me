@@ -1,11 +1,3 @@
-# from pymongo import MongoClient
-#
-# client = MongoClient("mongodb+srv://saranoja:saranoja@cluster0.pgzyu.mongodb.net/<dbname>?retryWrites=true&w=majority")
-# db = client.recommend_me
-# books_collection = db.books
-# cursor = books_collection.find({})
-# for document in cursor:
-#     print(document)
 import json
 from typing import List
 

@@ -1,6 +1,5 @@
 from PyPDF2 import PdfFileReader as reader
 from collections import OrderedDict
-import json
 
 
 class SuggestionRetriever:
@@ -69,5 +68,4 @@ class SuggestionRetriever:
                     if first_page_of_cluster < last_page_of_cluster:
                         buckets[f"{first_page_of_cluster}-{last_page_of_cluster}"] = word_cluster
                     word_cluster = []
-        # print(f'buckets={json.dumps(buckets)}')
         return buckets
