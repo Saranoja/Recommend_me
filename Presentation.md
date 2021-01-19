@@ -13,6 +13,14 @@ Let's say one student - call him Mike - didn't make it to the Graphs lecture one
 He wants to have a better image of what _planar graphs_ are and how they work. On a fast Google search, Mike gets ~5.140.000 results in less than half a second. 5 _million_ results. Where to begin? First result is from _Wikipedia_. Click.
 
 <img src="res/formula.svg"
+     alt="formula"
+     style="width: 10%; height: 100%" />
+
+<img src="res/formula.svg"
+alt="formula"
+style="width: 20%; height: 100%" />
+
+<img src="res/formula.svg"
 alt="formula"
 style="width: 40%; height: 100%" />
 
@@ -87,8 +95,7 @@ Note #2: Our heuristic is based on the fact that finding an exact match for the 
 Below you can find the distribution of the most relevant keywords from the _Planar Graphs_ lecture notes across the book _"Graph Theory" by Reinhard Diestel_, as calculated after extracting the text from the Electronic Edition PDF.
 
 <br>
-
-![Keywords Distributions](res/distributions.PNG)
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1aKDHPXDjkp-lyMJYMaiAe-566oAR4q39" frameborder="0" width="100%" height="536.9850435256958" allowtransparency="true"></iframe>
 
 * What is noticeable is that, except for the word _planar_, all the other words seem to have pretty uniform distributions and this is where the heuristic we have proposed has a significant impact. Therefore, our goal becomes to calculate and point out the _"best"_ clusters of keywords found in the book - this is where the content related to the lecture should be found.
 
@@ -99,11 +106,14 @@ What we are looking for in a bucket is, in fact, a "condensed" crowd of meaningf
 
 Below is a representation of the best 7 such buckets, with respect to their accumulated score. There is, of course, the first bucket (between pages 73-102) which stands out due to the initially assigned weights and this is the case for most of the scenarios, since usually there is one dedicated chapter for each topic in a book.
 
-![Keywords Distributions](res/bars-chart.PNG)
+<br>
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1Y8i1eLO8YR0WCI4PxEDAeeNYz7CIReuv" frameborder="0" width="100%" height="524.9957275390625" allowtransparency="true"></iframe>
+<br>
 
-![Keywords Distributions](res/best1.PNG)
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1y_1HG9rEwzoaaF16lNzw9XcdruN-nNxq" frameborder="0" width="100%" height="503.98504638671875" allowtransparency="true"></iframe>
 
-![Keywords Distributions](res/best3.PNG)
+<iframe src="https://cdn2.datamatic.io/runtime/echarts/3.7.2_293/embedded/index.html#id=104730706846367182626/1AXatR1dlMHqRv6AQBRGtakbnS9T5GdXb" frameborder="0" width="100%" height="480.99359130859375" allowtransparency="true"></iframe>
+
 ## Next steps
 
 For improved accuracy, we have also added an option for the users to choose the keywords they believe describe the best the lecture. This obviously increases the probability of identifying the best #1 cluster as the target section, since the noisy data is, in theory, zero. Of course, this could be extended to another heuristic: _the more numerous and particular the keywords are and the more accurate are their weights, the better the result_.
@@ -115,9 +125,3 @@ We also wanted to cover the problem of more "advanced issues" students may be in
 <img src="res/Flesch-Kincaid.svg"
 alt="graph"
 style="width: 50%; height: 100%" />
-
-## The team
-
-* Irina Calin - in charge with developing the buckets creation algorithm
-* Mihai Crisan - in charge with keywords extraction & academic research papers searching
-* Both worked on bug fixing and other small issues (i.e. books mappings, endpoints)
